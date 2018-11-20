@@ -1,0 +1,12 @@
+---
+
+- name: Check network device OS
+ assert:
+   that: >
+     ansible_network_os == 'nxos' or
+     ansible_network_os == 'ios'
+   msg: "Network device OS not defined or not supported by this role: {{ ansible_network_os }}"
+
+- import_tasks: nxos_checks.yaml
+  when: >
+    ansible_network_os == 'nxos'

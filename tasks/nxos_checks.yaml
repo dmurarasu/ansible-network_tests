@@ -1,0 +1,5 @@
+---
+
+- import_tasks: "{{ ansible_network_os }}"/nxos_ip_int_check.yaml
+  when: >
+    network_tests_nxos_ip_int is sameas True

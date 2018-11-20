@@ -1,0 +1,31 @@
+---
+
+- nxos_command:
+    commands:
+      - show ip interface brief vrf all
+  register: output
+
+- name: parse the data
+  command_parser:
+    file: "{{ role_path }}"/parsers/show_ip_int_brief.yaml
+    content: "{{output.stdout[0]}}"
+
+- name: change ethernet and loopback interface to full value
+  set_fact: 
+    ip_interface_facts: "{{ ip_interface_facts | regex_replace('Eth', 'Ethernet') | regex_replace('Lo', 'loopback') }}"
+
+- name: display data
+  debug: var=ip_interface_facts
+
+- name: check ip int status is as defined
+  assert:
+    that: >
+      item.admin_state == ip_interface_facts[item.name].admin_state and
+      item.ip.address.ipv4_address|ipaddr('address')  == ip_interface_facts[item.name].ip
+    msg: "IP tests failed"
+#  debug:
+#    msg: "{{item.name}}"
+  loop: "{{ interfaces | net_int_filter }}"
+  when: >
+    item.ip is defined and
+    ip_interface_facts[item.name] is defined
