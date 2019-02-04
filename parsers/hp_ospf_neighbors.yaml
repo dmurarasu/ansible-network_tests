@@ -1,0 +1,48 @@
+---
+
+- name: parser meta data
+  parser_metadata:
+    version: 1.0
+    command: display ospf peer
+    network_os: ios
+
+- name: match local router ID
+  pattern_match:
+    regex: '^OSPF\sProcess\s\w\s\w+\s\w+\s\w+\s(\d+\.\d+\.\d+\.\d+)'
+    match_all: yes
+  register: local_router_id
+
+- name: match area
+  pattern_match:
+    regex: '^\sArea:\s+(\d+\.\d+\.\d+\.\d+)'
+    match_all: yes
+  register: local_area_id
+
+- name: match peers section
+  pattern_match:
+    regex: '^\s(\d+\.\d+\.\d+\.\d+)\s+(\d+\.\d+\.\d+\.\d+)\s+\w\s+\w\s+(\w+)\s+(\w+)'
+    match_all: yes
+  register: peers_section
+  export: True
+
+- name: GENERATE JSON DATA STRUCTURE
+  json_template:
+    template:
+      - key: "{{ item.matches.0 }}"
+        object:
+            - key: Local_Router_ID
+              value: "{{ local_router_id[0].matches }}"
+            - key: Area_ID
+              value: "{{ local_area_id[0].matches }}"
+            - key: Peer_Router_ID
+              value: "{{ item.matches.0 }}"
+            - key: Peer_Interface_Address
+              value: "{{ item.matches.1 }}"
+            - key: Interface_Name
+              value: "{{ item.matches.2 }}"
+            - key: Ospf_adj_state
+              value: "{{ item.matches.3 }}"
+  loop: "{{ peers_section }}"
+  register: my_ospf_neighbors
+  export: True
+  export_as: dict

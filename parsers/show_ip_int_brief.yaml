@@ -11,6 +11,7 @@
     regex: "\\n(\\S+)\\s+(\\d+\\.\\d+\\.\\d+\\.\\d+)\\s+protocol\\-(\\w+)\\/link\\-(\\w+)\\/admin\\-(\\w+)"
     match_all: yes
   register: section
+  export: yes
 
 - name: GENERATE JSON DATA STRUCTURE
   json_template:

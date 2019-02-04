@@ -1,12 +1,18 @@
 ---
 
 - name: Check network device OS
- assert:
+  assert:
    that: >
      ansible_network_os == 'nxos' or
      ansible_network_os == 'ios'
    msg: "Network device OS not defined or not supported by this role: {{ ansible_network_os }}"
 
-- import_tasks: nxos_checks.yaml
+- import_tasks: ios_checks.yaml
   when: >
-    ansible_network_os == 'nxos'
+    ansible_network_os == 'ios' and
+    my_real_network_os | default(' ') != 'hp'
+
+### for hp comware 5 switches. uses ios modules as they work as long as 'header legal' command is not set
+- import_tasks: hp_checks.yaml
+  when: >
+    my_real_network_os | default(' ') == 'hp'
