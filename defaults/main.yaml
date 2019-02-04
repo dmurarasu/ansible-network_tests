@@ -1,2 +1,8 @@
 ---
 
+### set to True if you want to see how parsed data looks in playbook output
+display_parse_data: False
+
+
+### set to True when you want to check hp comware 5 ospf peers
+hp_network_ospf_neighbor: False

@@ -2,4 +2,4 @@
 
 - import_tasks: hp/hp_ospf_neighbors.yaml
   when: >
-    network_ospf_neighbor is sameas True
+    hp_network_ospf_neighbor is sameas True
