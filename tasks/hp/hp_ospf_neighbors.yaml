@@ -5,7 +5,7 @@
     prompt:
       - ---- More ----
     answer:
-      - '     '
+      - '         '
   register: output
 
 - name: parse the data
@@ -14,7 +14,7 @@
     content: "{{output.stdout}}"
 
 - name: display data
-  debug: var=my_ospf_neighbors
+  debug: var=net_ospf_neighbors
   when: >
     display_parse_data is sameas True
 

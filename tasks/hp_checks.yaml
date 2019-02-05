@@ -3,3 +3,11 @@
 - import_tasks: hp/hp_ospf_neighbors.yaml
   when: >
     hp_network_ospf_neighbor is sameas True
+
+- import_tasks: hp/hp_ip_int_brief.yaml
+  when: >
+    hp_ip_int_brief is sameas True
+
+- import_tasks: hp/hp_int_brief.yaml
+  when: >
+    hp_int_brief is sameas True

@@ -43,6 +43,6 @@
             - key: Ospf_adj_state
               value: "{{ item.matches.3 }}"
   loop: "{{ peers_section }}"
-  register: my_ospf_neighbors
+  register: net_ospf_neighbors
   export: True
   export_as: dict
