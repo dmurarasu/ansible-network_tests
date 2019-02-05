@@ -1,0 +1,32 @@
+---
+
+- name: parser meta data
+  parser_metadata:
+    version: 1.0
+    command: display interface brief
+    network_os: ios
+
+- name: match peers section
+  pattern_match:
+    regex: '^(BAGG\d+)\s+(\w+)\s+(\S+)\s+(\S+)\s+(\w+)\s+\w+\s+(\S+)'
+    match_all: yes
+  register: int_section
+  export: True
+
+- name: GENERATE JSON DATA STRUCTURE
+  json_template:
+    template:
+      - key: "{{ item.matches.0 }}"
+        object:
+            - key: Link State
+              value: "{{ item.matches.1 }}"
+            - key: Speed
+              value: "{{ item.matches.2 }}"
+            - key: Duplex
+              value: "{{ item.matches.3 }}"
+            - key: Interface Description
+              value: "{{ item.matches.4 }}"
+  loop: "{{ int_section }}"
+  register: net_int_brief
+  export: True
+  export_as: dict
